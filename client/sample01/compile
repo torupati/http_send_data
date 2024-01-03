@@ -1,0 +1,2 @@
+gcc main.cc `pkg-config --libs libcurl`
+
