@@ -1,0 +1,2 @@
+gcc repeat_post_main.cc `pkg-config --libs libcurl`
+
