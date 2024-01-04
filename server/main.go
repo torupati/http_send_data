@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"io/ioutil"
 	"os"
+	"log"
 )
 
 func bindata_handler(w http.ResponseWriter, request *http.Request) {
@@ -29,7 +30,7 @@ func bindata_handler(w http.ResponseWriter, request *http.Request) {
 }
 
 func main() {
-	fmt.Println("Hello world.")
+	log.Println("Hello world.")
 	http.HandleFunc("/sample1", post_rec)
 	http.HandleFunc("/bindata", bindata_handler)
 	http.HandleFunc("/sample3", Sample3)
@@ -41,7 +42,9 @@ func main() {
     fs := http.FileServer(http.Dir("static/"))
     http.Handle("/static/", http.StripPrefix("/static/", fs))
 
+	port := 8000
 	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
 func post_rec(w http.ResponseWriter, r *http.Request) {
@@ -52,7 +55,7 @@ func post_rec(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println("hoge", r.FormValue("hoge"))
 	//fmt.Println("foo", r.FormValue("foo"))
 	for k, v := range r.Form {
-		fmt.Printf("%v : %v\n", k, v)
+		log.Printf("Form k=%v v=%v\n", k, v)
 	}
 }
 
