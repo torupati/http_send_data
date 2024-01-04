@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <time.h>
 #include <curl/curl.h>
 
@@ -14,14 +17,14 @@ int main(void)
         if(res == CURLE_OK){
             printf("OK set url\n");
         }else{
-            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+            fprintf(stderr, "curl_easy_setopt(CURLOPT_URL) failed: %s\n", curl_easy_strerror(res));
         }
-        for(int i=0; i< 10; i++){
+        for(int i=0; i< 3; i++){
             char msgbuf[1024];
             sprintf(msgbuf, "foo=%d&hoge=aaa", 1000*i);
             res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, msgbuf);
             if(res != CURLE_OK){
-                fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+                fprintf(stderr, "curl_easy_setopt(CURLOPT_POSTFIELDS) failed: %s\n", curl_easy_strerror(res));
             }
             res = curl_easy_perform(easy_handle);
             if(res != CURLE_OK){
@@ -29,6 +32,33 @@ int main(void)
             }
             struct timespec req = {.tv_sec=1, .tv_nsec=0};
             nanosleep(&req, NULL);
+        }
+        printf("a0\n");
+        // send binary data
+        res = curl_easy_setopt(easy_handle, CURLOPT_URL, "http://127.0.0.1:8080/bindata");
+        if(res == CURLE_OK){
+            printf("OK set url\n");
+        }else{
+            fprintf(stderr, "curl_easy_setopt(CURLOPT_URL) failed: %s\n", curl_easy_strerror(res));
+        }
+        uint16_t length_of_data = 16;
+        unsigned char* data = (unsigned char*)malloc(length_of_data);
+        //for(uint8_t j=0; j<256; j++) data[j] = j;
+        printf("a1\n");
+        //res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDSIZE, length_of_data);
+        res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDSIZE_LARGE, length_of_data);
+        if(res != CURLE_OK){
+            fprintf(stderr, "curl_easy_setopt(CURLOPT_POSTFIELDSIZE) failed: %s\n", curl_easy_strerror(res));
+        }
+        printf("a2\n");
+        res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, data);
+        if(res != CURLE_OK){
+            fprintf(stderr, "curl_easy_setopt(CURLOPT_POSTFIELDS) failed: %s\n", curl_easy_strerror(res));
+        }
+        printf("aaa\n");
+        res = curl_easy_perform(easy_handle);
+        if(res != CURLE_OK){
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         }
         curl_easy_cleanup(easy_handle);
     }

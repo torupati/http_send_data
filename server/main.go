@@ -7,11 +7,31 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"io/ioutil"
+	"os"
 )
 
+func bindata_handler(w http.ResponseWriter, request *http.Request) {
+	fmt.Println("bindata_handler")
+	d, err := ioutil.ReadAll(request.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+	tmpfile, err := os.Create("./" + "data.bin")
+	defer tmpfile.Close()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+	tmpfile.Write(d)
+
+	w.WriteHeader(200)
+	return
+}
+
 func main() {
-	fmt.Println(time.Now(), "Hello world.")
+	fmt.Println("Hello world.")
 	http.HandleFunc("/sample1", post_rec)
+	http.HandleFunc("/bindata", bindata_handler)
 	http.HandleFunc("/sample3", Sample3)
 
 	http.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
