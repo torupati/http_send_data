@@ -40,7 +40,7 @@ int main(void)
         }else{
             fprintf(stderr, "curl_easy_setopt(CURLOPT_URL) failed: %s\n", curl_easy_strerror(res));
         }
-        uint32_t length_of_data = 1024*1024*3;
+        curl_off_t length_of_data = 1024*1024*3;
         unsigned char* data = (unsigned char*)malloc(length_of_data);
         //for(uint8_t j=0; j<256; j++) data[j] = j;
         //res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDSIZE, length_of_data);
