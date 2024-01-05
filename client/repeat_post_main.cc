@@ -40,16 +40,16 @@ int main(void)
         }else{
             fprintf(stderr, "curl_easy_setopt(CURLOPT_URL) failed: %s\n", curl_easy_strerror(res));
         }
-        curl_off_t length_of_data = 1024*1024*3;
-        unsigned char* data = (unsigned char*)malloc(length_of_data);
+        uint32_t data_num = 1024*1024;
+        curl_off_t length_of_data = data_num*2;
+        uint16_t* data = (uint16_t*)malloc(data_num*sizeof(uint16_t));
         //for(uint8_t j=0; j<256; j++) data[j] = j;
         //res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDSIZE, length_of_data);
         res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDSIZE_LARGE, length_of_data);
         if(res != CURLE_OK){
             fprintf(stderr, "curl_easy_setopt(CURLOPT_POSTFIELDSIZE) failed: %s\n", curl_easy_strerror(res));
         }
-        printf("a2\n");
-        res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, data);
+        res = curl_easy_setopt(easy_handle, CURLOPT_POSTFIELDS, reinterpret_cast<uint8_t*>(data));
         if(res != CURLE_OK){
             fprintf(stderr, "curl_easy_setopt(CURLOPT_POSTFIELDS) failed: %s\n", curl_easy_strerror(res));
         }

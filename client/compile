@@ -1,2 +1,2 @@
-gcc repeat_post_main.cc `pkg-config --libs libcurl`
+gcc repeat_post_main.cc -Wall -W `pkg-config --libs libcurl`
 

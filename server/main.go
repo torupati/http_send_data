@@ -42,8 +42,8 @@ func main() {
     fs := http.FileServer(http.Dir("static/"))
     http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	port := 8000
-	http.ListenAndServe(":8080", nil)
+	port := 8080
+	//http.ListenAndServe(":8080", nil)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
 
